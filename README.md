@@ -144,29 +144,37 @@ instructions for installing via Homebrew and other methods):
     go get -u github.com/stripe/stripe-mock
     stripe-mock
 
-  Run all tests (modify `-e` according to your Python target):
+Initialize the development virtualenv and install dependencies:
 
-    tox -e py27
+    make init
+
+Run all tests on all supported Python versions (note that you will need an interpreter for each supported Python version to be able to run this command -- it's recommended to use a tool like [pyenv] to manage those different versions):
+
+    make test
+
+Run all tests on a single Python version (modify `-e` according to your Python target):
+
+    pipenv run tox -e py36
 
 Run all tests in a single file:
 
-    tox -e py27 -- tests/api_resources/abstract/test_updateable_api_resource.py
+    pipenv run tox -e py36 -- tests/api_resources/abstract/test_updateable_api_resource.py
 
 Run a single test suite:
 
-    tox -e py27 -- tests/api_resources/abstract/test_updateable_api_resource.py::TestUpdateableAPIResource
+    pipenv run tox -e py36 -- tests/api_resources/abstract/test_updateable_api_resource.py::TestUpdateableAPIResource
 
 Run a single test:
 
-    tox -e py27 -- tests/api_resources/abstract/test_updateable_api_resource.py::TestUpdateableAPIResource::test_save
+    pipenv run tox -e py36 -- tests/api_resources/abstract/test_updateable_api_resource.py::TestUpdateableAPIResource::test_save
 
 Run the linter with:
 
-    pip install flake8
-    flake8 stripe tests
+    make lint
 
 [api-keys]: https://dashboard.stripe.com/account/apikeys
 [connect]: https://stripe.com/connect
+[pyenv]: https://github.com/pyenv/pyenv
 [stripe-mock]: https://github.com/stripe/stripe-mock
 
 <!--

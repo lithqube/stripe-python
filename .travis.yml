@@ -2,15 +2,6 @@ sudo: false
 
 language: python
 
-python:
-  - "2.7"
-  - "3.4"
-  - "3.5"
-  - "3.6"
-  - "3.7-dev"
-  - "pypy"
-  - "pypy3"
-
 cache:
   directories:
     - stripe-mock
@@ -33,12 +24,33 @@ before_install:
     STRIPE_MOCK_PID=$!
 
 install:
-  - pip install -U setuptools pip flake8 coveralls
-  - python setup.py install
+  - make init
 
 script:
-  - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then flake8 stripe tests; fi
-  - python setup.py test -a "-n 8"
+  - make ci
 
-after_success:
-  coveralls
+stages:
+  - test
+  - lint
+  - coverage
+
+jobs:
+  include:
+    - python: "2.7"
+    - python: "3.4"
+    - python: "3.5"
+    - python: "3.6"
+    - python: "3.7-dev"
+    - python: "pypy"
+    - python: "pypy3"
+    - stage: lint
+      python: "2.7"
+      script:
+        - make lint
+    - stage: coverage
+      python: "2.7"
+      python: "3.6"
+      script:
+        - make coverage
+      after_success:
+        - pipenv run coveralls
